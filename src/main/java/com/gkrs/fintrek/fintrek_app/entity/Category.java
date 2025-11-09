@@ -16,6 +16,8 @@ public class Category {
     private Long Id;
 
     private String categoryName;
+
+    @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 
     @ManyToOne(fetch = FetchType.LAZY)

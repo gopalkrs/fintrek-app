@@ -66,6 +66,7 @@ public class TransactionService {
         txn.setAccount(account);
         txn.setDescription(transactionRequest.getDescription());
         txn.setTransactionDate(transactionRequest.getTransactionDate());
+        txn.setUser(managedUser);
         transactionRepository.save(txn);
 
         BigDecimal updatedBalance = account.getBalance();
