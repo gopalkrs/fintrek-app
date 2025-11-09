@@ -21,7 +21,8 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @PostMapping
+
+    @PostMapping("/add")
     public ResponseEntity<?> createNewTransaction(@Valid @RequestBody TransactionRequestDTO transactionRequest,
                                                   BindingResult bindingResult){
         if(bindingResult.hasErrors()){

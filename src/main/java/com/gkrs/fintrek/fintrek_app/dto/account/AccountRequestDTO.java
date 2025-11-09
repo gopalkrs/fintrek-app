@@ -1,4 +1,5 @@
 package com.gkrs.fintrek.fintrek_app.dto.account;
+import com.gkrs.fintrek.fintrek_app.entity.enums.AccountType;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -13,6 +14,9 @@ public class AccountRequestDTO {
     @NotNull(message = "Initial balance is required")
     @DecimalMin(value = "0.0" , message = "Balance cannot be negative")
     private BigDecimal balance;
+
+    @NotNull(message = "Account type is required")
+    private AccountType accountType;
 
     @NotNull(message = "User Id is required")
     private Long userId;

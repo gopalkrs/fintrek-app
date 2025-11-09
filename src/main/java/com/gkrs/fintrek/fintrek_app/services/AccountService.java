@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -43,13 +42,14 @@ public class AccountService {
             user.getAccount().add(account);
             log.info("account data : {}", account);
             userRepository.save(user);
+            accountRepository.save(account);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public AccountResponseDTO getAccountInfo(Long id){
-        Account account = accountRepository.findById(id)
+        Account account = accountRepository.findByIdWithUser(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + id));
 
         return accountMapper.toResponseDTO(account);
@@ -64,5 +64,21 @@ public class AccountService {
         return accounts.stream()
                 .map(account -> accountMapper.toResponseDTO(account))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteAccount(Long accountId, Long userId){
+        try{
+            var user = userRepository.findById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            Account account = accountRepository.findById(accountId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+            accountRepository.delete(account);
+            user.getAccount().remove(account);
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

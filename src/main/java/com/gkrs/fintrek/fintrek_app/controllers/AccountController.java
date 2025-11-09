@@ -49,4 +49,14 @@ public class AccountController {
         List<AccountResponseDTO> accountsList = accountService.getAccountsByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(accountsList);
     }
+
+    @DeleteMapping("/delete/user/{userId}/accounts/{accountId}")
+    public ResponseEntity<?> deleteAccount(@PathVariable Long userId, @PathVariable Long accountId){
+        try{
+            accountService.deleteAccount(accountId, userId);
+            return ResponseEntity.status(HttpStatus.OK).body("Account deleted successfully.");
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

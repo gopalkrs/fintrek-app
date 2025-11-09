@@ -25,7 +25,7 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transactions> transactions;
 
-//    @ManyToOne(mappedBy = "category_id", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @ManyToOne(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Budget> budget;
 
 }

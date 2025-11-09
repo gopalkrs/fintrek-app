@@ -10,20 +10,24 @@ import org.springframework.stereotype.Component;
 public class AccountMapper {
     private final ModelMapper modelMapper;
 
-    public AccountMapper(ModelMapper modelMapper){
+    public AccountMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
-    public AccountRequestDTO toDTO(Account account){
+    public AccountRequestDTO toDTO(Account account) {
         return modelMapper.map(account, AccountRequestDTO.class);
     }
 
-    public Account toEntity(AccountRequestDTO dto){
+    public Account toEntity(AccountRequestDTO dto) {
         return modelMapper.map(dto, Account.class);
     }
 
-    public AccountResponseDTO toResponseDTO(Account account){
-        return modelMapper.map(account, AccountResponseDTO.class);
+    public AccountResponseDTO toResponseDTO(Account account) {
+        AccountResponseDTO dto = modelMapper.map(account, AccountResponseDTO.class);
+        if (account.getUser() != null) {
+            dto.setUserId(account.getUser().getId());
+        }
+        return dto;
     }
 
 }

@@ -8,7 +8,6 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -30,12 +29,16 @@ public class Transactions {
 
     private String description;
 
-    @Column(nullable = false, length = 20)
-    private String categoryName;
+//    @Column(nullable = false, length = 20)
+//    private String categoryName;
 
     private Date transactionDate;
 
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)

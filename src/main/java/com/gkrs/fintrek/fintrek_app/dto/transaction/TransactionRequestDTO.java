@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Data
 public class TransactionRequestDTO {
-    @NotBlank(message = "Transaction type is required")
+    @NotNull(message = "Transaction type is required")
     private TransactionType transactionType;
 
     @NotNull(message = "Amount is required")
@@ -24,6 +24,9 @@ public class TransactionRequestDTO {
 
     @NotNull(message = "Account id is required")
     private Long accountId;
+
+    @NotNull(message = "User id is required")
+    private Long userId;
 
     @NotNull(message = "Date is required")
     private Date transactionDate;
