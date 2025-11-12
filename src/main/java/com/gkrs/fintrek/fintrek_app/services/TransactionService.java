@@ -1,6 +1,8 @@
 package com.gkrs.fintrek.fintrek_app.services;
 
+import com.gkrs.fintrek.fintrek_app.dto.transaction.TransactionInfoDTO;
 import com.gkrs.fintrek.fintrek_app.dto.transaction.TransactionRequestDTO;
+import com.gkrs.fintrek.fintrek_app.entity.Account;
 import com.gkrs.fintrek.fintrek_app.entity.Category;
 import com.gkrs.fintrek.fintrek_app.entity.Transactions;
 import com.gkrs.fintrek.fintrek_app.entity.User;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -77,5 +80,39 @@ public class TransactionService {
         }
         account.setBalance(updatedBalance);
         accountRepository.save(account);
+    }
+
+    @Transactional
+    public void deleteTransaction(Long userId, Long accountId, Long transactionId){
+        Account account = accountRepository.findByIdWithUser(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + accountId));
+
+        TransactionInfoDTO txn = getTransactionById(userId, accountId, transactionId);
+        if(txn.getTransactionType().toString().equals("CREDIT")){
+            account.setBalance(account.getBalance().add(txn.getAmount()));
+        } else {
+            account.setBalance(account.getBalance().subtract(txn.getAmount()));
+        }
+        accountRepository.save(account);
+        transactionRepository.deleteById(txn.getTransactionId());
+    }
+
+    public TransactionInfoDTO getTransactionById(Long userId, Long accountId, Long transactionId){
+
+        Optional<TransactionInfoDTO> txn = transactionRepository.getTransactionInfo(userId, accountId, transactionId);
+        if(txn.isEmpty()){
+            throw new ResourceNotFoundException("Transaction not found with id: " + transactionId);
+        } else {
+            return txn.get();
+        }
+    }
+
+    public List<Transactions> getTransactionsByUser(Long userId, Long accountId){
+        User user = userService.getUserInfo(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + userId));
+        Account account = accountRepository.findByIdWithUser(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + accountId));
+
+        return transactionRepository.findByUserIdAndAccountId(userId, accountId);
     }
 }

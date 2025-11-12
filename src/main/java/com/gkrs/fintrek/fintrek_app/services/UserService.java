@@ -5,6 +5,9 @@ import com.gkrs.fintrek.fintrek_app.dto.user.UserResponseDTO;
 import com.gkrs.fintrek.fintrek_app.entity.User;
 import com.gkrs.fintrek.fintrek_app.mapper.UserMapper;
 import com.gkrs.fintrek.fintrek_app.repositories.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -61,4 +64,24 @@ public class UserService {
                 .build();
     }
 
+    public UserResponseDTO getUserProfile(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication!=null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String
+        && authentication.getPrincipal().equals("anonymousUser"))){
+            Object principal = authentication.getPrincipal();
+            if(principal instanceof User userDetails){
+                UserResponseDTO response = new UserResponseDTO();
+                response.setEmail(userDetails.getEmail());
+                response.setId(userDetails.getId());
+                // optionally set other fields if stored in your user entity
+                return response;
+            }
+        }
+        return null;
+    }
+
 }
+
+
+
