@@ -5,6 +5,7 @@ import com.gkrs.fintrek.fintrek_app.dto.user.UserResponseDTO;
 import com.gkrs.fintrek.fintrek_app.entity.User;
 import com.gkrs.fintrek.fintrek_app.mapper.UserMapper;
 import com.gkrs.fintrek.fintrek_app.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -28,8 +29,9 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody UserRequestDTO userData,
+    public ResponseEntity<?> createUser(@RequestBody @Valid UserRequestDTO userData,
                                              BindingResult bindingResult){
+        System.out.println(userData);
         if(bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(
                     bindingResult.getAllErrors().stream()
